@@ -1,0 +1,77 @@
+ Frontend Developer (React Specialist)
+Assignment: Ecommerce Frontend Development
+Objective: Build a responsive, user-friendly React frontend for the Trendze AI ecommerce platform.
+
+Tech Stack: React, React Router, Context API, Axios, Tailwind CSS, Stripe.js
+
+Key Responsibilities:
+
+Implement all user interfaces and customer flows
+
+Integrate with backend APIs
+
+Payment method : COD only
+
+Implement state management for cart, user authentication, and products
+
+Ensure responsive design and cross-browser compatibility
+
+Folder Structure to Deliver:
+
+text
+frontend/
+├── public/
+│   ├── favicon.ico
+│   ├── logo.png
+│   └── manifest.json
+├── src/
+│   ├── components/
+│   │   ├── common/ (Header, Footer, Loading, Modal, Pagination)
+│   │   ├── auth/ (LoginForm, RegisterForm, ProtectedRoute)
+│   │   ├── products/ (ProductCard, ProductGrid, ProductDetail, Filters)
+│   │   ├── cart/ (CartItem, CartSummary, CartSidebar)
+│   │   ├── orders/ (OrderCard, OrderSummary)
+│   │   ├── admin/ (AdminSidebar, ProductForm, DashboardStats)
+│   │   └── ai/ (RecommendationSection, SimilarProducts)
+│   ├── pages/
+│   │   ├── Home/ (HomePage)
+│   │   ├── Auth/ (LoginPage, RegisterPage)
+│   │   ├── Products/ (ProductListing, ProductDetail)
+│   │   ├── Cart/ (CartPage)
+│   │   ├── Checkout/ (CheckoutPage)
+│   │   ├── User/ (Profile, OrderHistory, Wishlist)
+│   │   └── Admin/ (Dashboard, ProductManagement, OrderManagement)
+│   ├── contexts/
+│   │   ├── AuthContext.jsx
+│   │   ├── CartContext.jsx
+│   │   └── ProductContext.jsx
+│   ├── hooks/
+│   │   ├── useAuth.js
+│   │   ├── useCart.js
+│   │   └── useProducts.js
+│   ├── services/
+│   │   └── api/ (authAPI.js, productAPI.js, orderAPI.js, aiAPI.js)
+│   ├── utils/ (constants, helpers, formatters)
+│   ├── styles/ (CSS files)
+│   └── assets/ (images, icons)
+├── package.json
+└── README.md
+API Integration Points:
+
+Backend Base URL: http://localhost:5000/api
+
+AI Service URL: http://localhost:8000/api
+
+Key endpoints: /auth/*, /products/*, /orders/*, /cart/*, /ai/recommendations
+
+Deliverables:
+
+Complete React application with all pages and components designed with professional ui
+
+Responsive design working on desktop and mobile
+
+Integration with all backend APIs
+
+Proper error handling and loading states
+
+Documentation in README.md
