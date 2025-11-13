@@ -1,13 +1,21 @@
 import { useLocation } from "wouter";
-import RegisterForm from "@/components/auth/RegisterForm";
+import { useAuth } from "../context/AuthContext";
+import RegisterForm from "../components/auth/RegisterForm";
 
 export default function RegisterPage() {
   const [, setLocation] = useLocation();
+  const { register } = useAuth();
 
-  const handleRegister = (name: string, email: string, password: string) => {
-    console.log('Register attempt:', name, email, password);
-    // todo: remove mock functionality - redirect to home after successful registration
-    setLocation('/');
+  const handleRegister = async (name: string, email: string, password: string, phone: string) => {
+    try {
+      console.log('Register attempt:', name, email, password, phone);
+      await register(name, email, password, phone);
+      // ✅ FIXED: Redirect to login page with success message
+      setLocation('/login?message=Registration successful! Please login.');
+    } catch (error) {
+      console.error('Registration failed:', error);
+      alert('Registration failed: ' + (error as Error).message);
+    }
   };
 
   return (

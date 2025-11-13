@@ -1,80 +1,86 @@
-import ProductCard, { type Product } from "../products/ProductCard";
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useRef } from "react";
+import React from 'react';
+import { Product } from '../../types';
+import ProductCard from '../products/ProductCard';
+import { useProducts } from '../../hooks/useProducts';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Skeleton } from '../ui/skeleton';
 
 interface RecommendationSectionProps {
-  products: Product[];
+  products?: Product[];
+  onAddToCart?: (id: string) => void;
+  onToggleWishlist?: (id: string) => void;
   title?: string;
-  onAddToCart?: (productId: string) => void;
-  onToggleWishlist?: (productId: string) => void;
-  wishlistIds?: string[];
+  category?: string;
+  maxItems?: number;
 }
 
-export default function RecommendationSection({ 
-  products,
-  title = "Recommended for You",
+const RecommendationSection: React.FC<RecommendationSectionProps> = ({ 
+  products: externalProducts,
   onAddToCart,
   onToggleWishlist,
-  wishlistIds = []
-}: RecommendationSectionProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  title = "Recommended For You",
+  category,
+  maxItems = 6
+}) => {
+  // Use external products if provided, otherwise fetch
+  const { data: fetchedProductsResponse, isLoading, error } = useProducts({
+    category,
+    limit: maxItems
+  });
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 300;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
+  // FIXED: Handle nested API response structure
+  const fetchedProducts = fetchedProductsResponse?.data?.products || [];
+  const products = externalProducts || fetchedProducts;
+
+  if (error) {
+    return null;
+  }
+
+  if (isLoading && !externalProducts) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            {Array.from({ length: maxItems }).map((_, index) => (
+              <div key={index} className="space-y-3">
+                <Skeleton className="h-48 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!products || !Array.isArray(products) || products.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Sparkles className="h-4 w-4 text-primary" />
-          </div>
-          <h2 className="text-2xl font-bold">{title}</h2>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => scroll('left')}
-            data-testid="button-scroll-left"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => scroll('right')}
-            data-testid="button-scroll-right"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      <div
-        ref={scrollContainerRef}
-        className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {products.map((product) => (
-          <div key={product.id} className="flex-shrink-0 w-64">
-            <ProductCard
-              product={product}
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+          {products.slice(0, maxItems).map((product) => (
+            <ProductCard 
+              key={product._id} 
+              product={product} 
+              showAddToCart={true}
               onAddToCart={onAddToCart}
               onToggleWishlist={onToggleWishlist}
-              isInWishlist={wishlistIds.includes(product.id)}
             />
-          </div>
-        ))}
-      </div>
-    </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
-}
+};
+
+export default RecommendationSection;

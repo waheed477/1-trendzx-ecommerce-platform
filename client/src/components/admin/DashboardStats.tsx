@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "../ui/card";
 import { DollarSign, Package, ShoppingCart, Users } from "lucide-react";
 
 interface StatCardProps {
@@ -35,29 +35,29 @@ export default function DashboardStats() {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatCard
         title="Total Revenue"
-        value="$45,231"
-        change="+20.1%"
+        value="$0.00"
+        change="+0%"
         icon={<DollarSign className="h-5 w-5" />}
         isPositive={true}
       />
       <StatCard
         title="Total Orders"
-        value="1,234"
-        change="+15.3%"
+        value="0"
+        change="+0%"
         icon={<ShoppingCart className="h-5 w-5" />}
         isPositive={true}
       />
       <StatCard
         title="Products"
-        value="567"
-        change="+8.2%"
+        value="0"
+        change="+0%"
         icon={<Package className="h-5 w-5" />}
         isPositive={true}
       />
       <StatCard
         title="Customers"
-        value="3,456"
-        change="+12.5%"
+        value="0"
+        change="+0%"
         icon={<Users className="h-5 w-5" />}
         isPositive={true}
       />

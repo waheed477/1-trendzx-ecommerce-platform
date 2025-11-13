@@ -19,3 +19,4 @@ export default function Loading({ size = "md", text }: LoadingProps) {
     </div>
   );
 }
+

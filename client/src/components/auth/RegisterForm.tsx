@@ -1,27 +1,43 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Card } from "../ui/card";
 import { useState } from "react";
 import { Link } from "wouter";
 
 interface RegisterFormProps {
-  onRegister?: (name: string, email: string, password: string) => void;
+  onRegister?: (name: string, email: string, password: string, phone: string) => void;
 }
 
 export default function RegisterForm({ onRegister }: RegisterFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
     if (password !== confirmPassword) {
-      console.log('Passwords do not match');
+      setError('Passwords do not match');
       return;
     }
-    onRegister?.(name, email, password);
+    
+    if (!phone) {
+      setError('Phone number is required');
+      return;
+    }
+
+    // Basic frontend validation
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
+    onRegister?.(name, email, password, phone);
   };
 
   return (
@@ -30,6 +46,12 @@ export default function RegisterForm({ onRegister }: RegisterFormProps) {
         <h1 className="text-3xl font-bold">Create Account</h1>
         <p className="text-muted-foreground">Sign up to start shopping</p>
       </div>
+
+      {error && (
+        <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -59,16 +81,32 @@ export default function RegisterForm({ onRegister }: RegisterFormProps) {
         </div>
 
         <div className="space-y-2">
+          <Label htmlFor="phone">Phone Number</Label>
+          <Input
+            id="phone"
+            type="tel"
+            placeholder="Enter your phone number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+            data-testid="input-phone"
+          />
+        </div>
+
+        <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
             type="password"
-            placeholder="Create a password"
+            placeholder="Create a password (min 6 characters)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             data-testid="input-password"
           />
+          <p className="text-xs text-muted-foreground">
+            Password must be at least 6 characters long
+          </p>
         </div>
 
         <div className="space-y-2">

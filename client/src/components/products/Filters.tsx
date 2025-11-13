@@ -1,13 +1,13 @@
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Slider } from "../ui/slider";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
+} from "../ui/accordion";
+import { Button } from "../ui/button";
 import { X } from "lucide-react";
 
 interface FiltersProps {

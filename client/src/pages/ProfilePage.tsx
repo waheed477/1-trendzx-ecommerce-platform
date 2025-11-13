@@ -1,22 +1,15 @@
 import { useState } from "react";
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Card } from "../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { User, Package, Heart, MapPin } from "lucide-react";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
-
-  // todo: remove mock functionality
-  const mockUser = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 (555) 123-4567'
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -52,15 +45,15 @@ export default function ProfilePage() {
                 <form className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" defaultValue={mockUser.name} data-testid="input-profile-name" />
+                    <Input id="name" placeholder="Enter your full name" data-testid="input-profile-name" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" defaultValue={mockUser.email} data-testid="input-profile-email" />
+                    <Input id="email" type="email" placeholder="Enter your email" data-testid="input-profile-email" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" defaultValue={mockUser.phone} data-testid="input-profile-phone" />
+                    <Input id="phone" type="tel" placeholder="Enter your phone number" data-testid="input-profile-phone" />
                   </div>
                   <Button type="submit" data-testid="button-save-profile">Save Changes</Button>
                 </form>

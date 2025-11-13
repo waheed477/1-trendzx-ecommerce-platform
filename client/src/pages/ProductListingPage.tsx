@@ -1,19 +1,13 @@
 import { useState } from "react";
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
-import ProductGrid from "@/components/products/ProductGrid";
-import Filters from "@/components/products/Filters";
-import Pagination from "@/components/common/Pagination";
-import CartSidebar from "@/components/cart/CartSidebar";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Filter, X } from "lucide-react";
-import headphonesImg from '@assets/generated_images/Black_wireless_headphones_product_f97b0eac.png';
-import smartwatchImg from '@assets/generated_images/Silver_smartwatch_product_photo_02dd5d6c.png';
-import backpackImg from '@assets/generated_images/Navy_laptop_backpack_product_80ff1ba5.png';
-import lampImg from '@assets/generated_images/White_minimalist_desk_lamp_adce920c.png';
-import walletImg from '@assets/generated_images/Brown_leather_wallet_product_bb04b500.png';
-import espressoImg from '@assets/generated_images/Stainless_espresso_machine_product_49a2bc3f.png';
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
+import ProductGrid from "../components/products/ProductGrid";
+import Filters from "../components/products/Filters";
+import Pagination from "../components/common/Pagination";
+import CartSidebar from "../components/cart/CartSidebar";
+import { Button } from "../components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Filter } from "lucide-react";
 
 export default function ProductListingPage() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -21,31 +15,19 @@ export default function ProductListingPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("featured");
 
-  // todo: remove mock functionality
-  const mockProducts = [
-    { id: '1', name: 'Premium Wireless Headphones', price: 199.99, image: headphonesImg, rating: 4.5, reviews: 128, category: 'Electronics', badge: 'New' },
-    { id: '2', name: 'Smart Fitness Watch', price: 299.99, image: smartwatchImg, rating: 4.8, reviews: 256, category: 'Electronics', badge: 'Trending' },
-    { id: '3', name: 'Professional Laptop Backpack', price: 79.99, image: backpackImg, rating: 4.3, reviews: 89, category: 'Accessories' },
-    { id: '4', name: 'Minimalist Desk Lamp', price: 59.99, image: lampImg, rating: 4.6, reviews: 142, category: 'Home & Decor' },
-    { id: '5', name: 'Premium Leather Wallet', price: 89.99, image: walletImg, rating: 4.4, reviews: 73, category: 'Accessories' },
-    { id: '6', name: 'Espresso Coffee Machine', price: 349.99, image: espressoImg, rating: 4.7, reviews: 198, category: 'Home & Kitchen' },
-    { id: '7', name: 'Wireless Earbuds Pro', price: 149.99, image: headphonesImg, rating: 4.6, reviews: 312, category: 'Electronics' },
-    { id: '8', name: 'Modern Office Chair', price: 279.99, image: lampImg, rating: 4.5, reviews: 156, category: 'Home & Decor' }
-  ];
-
-  const mockCartItems = [
-    { id: '1', name: 'Premium Wireless Headphones', price: 199.99, quantity: 2, image: headphonesImg }
-  ];
+  // Products will be managed by context/API
+  const products: any[] = [];
+  const cartItems: any[] = [];
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header cartItemCount={2} onCartClick={() => setCartOpen(true)} />
+      <Header cartItemCount={cartItems.length} onCartClick={() => setCartOpen(true)} />
       
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">All Products</h1>
-            <p className="text-muted-foreground">Showing 24 results</p>
+            <p className="text-muted-foreground">Showing {products.length} results</p>
           </div>
 
           <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
@@ -83,14 +65,14 @@ export default function ProductListingPage() {
 
             <div className="flex-1 space-y-8">
               <ProductGrid 
-                products={mockProducts}
+                products={products}
                 onAddToCart={(id) => console.log('Add to cart:', id)}
                 onToggleWishlist={(id) => console.log('Toggle wishlist:', id)}
               />
 
               <Pagination
                 currentPage={currentPage}
-                totalPages={5}
+                totalPages={Math.ceil(products.length / 12)}
                 onPageChange={setCurrentPage}
               />
             </div>
@@ -101,7 +83,7 @@ export default function ProductListingPage() {
       <Footer />
       
       <CartSidebar
-        items={mockCartItems}
+        items={cartItems}
         isOpen={cartOpen}
         onClose={() => setCartOpen(false)}
         onUpdateQuantity={(id, qty) => console.log('Update quantity:', id, qty)}
@@ -115,7 +97,18 @@ export default function ProductListingPage() {
             onClick={() => setMobileFiltersOpen(false)}
           />
           <div className="fixed left-0 top-0 bottom-0 w-full max-w-sm bg-background border-r z-50 p-6 overflow-y-auto md:hidden">
-            <Filters showCloseButton onClose={() => setMobileFiltersOpen(false)} />
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold">Filters</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setMobileFiltersOpen(false)}
+                data-testid="button-close-filters"
+              >
+                Close
+              </Button>
+            </div>
+            <Filters />
           </div>
         </>
       )}

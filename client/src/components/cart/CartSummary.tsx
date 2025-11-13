@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { Separator } from "../ui/separator";
 
 interface CartSummaryProps {
   subtotal: number;

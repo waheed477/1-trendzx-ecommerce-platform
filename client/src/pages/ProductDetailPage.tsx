@@ -1,66 +1,46 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import Header from "@/components/common/Header";
-import Footer from "@/components/common/Footer";
-import RecommendationSection from "@/components/ai/RecommendationSection";
-import CartSidebar from "@/components/cart/CartSidebar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
+import RecommendationSection from "../components/ai/RecommendationSection";
+import CartSidebar from "../components/cart/CartSidebar";
+import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Star, Heart, ShoppingCart, ChevronRight, Minus, Plus } from "lucide-react";
-import headphonesImg from '@assets/generated_images/Black_wireless_headphones_product_f97b0eac.png';
-import smartwatchImg from '@assets/generated_images/Silver_smartwatch_product_photo_02dd5d6c.png';
-import backpackImg from '@assets/generated_images/Navy_laptop_backpack_product_80ff1ba5.png';
-import lampImg from '@assets/generated_images/White_minimalist_desk_lamp_adce920c.png';
 
 export default function ProductDetailPage() {
   const [cartOpen, setCartOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // todo: remove mock functionality
-  const product = {
-    id: '1',
-    name: 'Premium Wireless Headphones',
-    price: 199.99,
-    rating: 4.5,
-    reviews: 128,
-    category: 'Electronics',
-    badge: 'New',
-    description: 'Experience exceptional sound quality with our premium wireless headphones. Featuring advanced noise cancellation technology, comfortable over-ear design, and up to 30 hours of battery life. Perfect for music lovers, professionals, and travelers alike.',
-    features: [
-      'Active Noise Cancellation',
-      '30-hour battery life',
-      'Premium comfort design',
-      'Multi-device connectivity',
-      'Built-in microphone',
-      'Foldable design'
-    ],
-    specifications: {
-      'Brand': 'TechPro',
-      'Model': 'TP-WH3000',
-      'Color': 'Matte Black',
-      'Connectivity': 'Bluetooth 5.0',
-      'Weight': '250g',
-      'Warranty': '2 years'
-    }
-  };
+  // Product will be managed by context/API
+  const product: any = null;
+  const cartItems: any[] = [];
+  const relatedProducts: any[] = [];
 
-  const images = [headphonesImg, headphonesImg, headphonesImg];
+  if (!product) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header cartItemCount={cartItems.length} onCartClick={() => setCartOpen(true)} />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
+            <Link href="/products">
+              <Button>Back to Products</Button>
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
-  const relatedProducts = [
-    { id: '2', name: 'Smart Fitness Watch', price: 299.99, image: smartwatchImg, rating: 4.8, reviews: 256, category: 'Electronics' },
-    { id: '3', name: 'Professional Laptop Backpack', price: 79.99, image: backpackImg, rating: 4.3, reviews: 89, category: 'Accessories' },
-    { id: '4', name: 'Minimalist Desk Lamp', price: 59.99, image: lampImg, rating: 4.6, reviews: 142, category: 'Home & Decor' }
-  ];
-
-  const mockCartItems = [
-    { id: '1', name: 'Premium Wireless Headphones', price: 199.99, quantity: 2, image: headphonesImg }
-  ];
+  const images: string[] = [];
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header cartItemCount={2} onCartClick={() => setCartOpen(true)} />
+      <Header cartItemCount={cartItems.length} onCartClick={() => setCartOpen(true)} />
       
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
@@ -79,27 +59,35 @@ export default function ProductDetailPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             <div className="space-y-4">
               <div className="aspect-square rounded-lg overflow-hidden bg-muted">
-                <img
-                  src={images[selectedImage]}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                  data-testid="img-main-product"
-                />
+                {images.length > 0 ? (
+                  <img
+                    src={images[selectedImage]}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    data-testid="img-main-product"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                    No Image Available
+                  </div>
+                )}
               </div>
-              <div className="grid grid-cols-4 gap-4">
-                {images.map((img, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`aspect-square rounded-lg overflow-hidden bg-muted border-2 ${
-                      selectedImage === index ? 'border-primary' : 'border-transparent'
-                    }`}
-                    data-testid={`button-thumbnail-${index}`}
-                  >
-                    <img src={img} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
+              {images.length > 0 && (
+                <div className="grid grid-cols-4 gap-4">
+                  {images.map((img, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`aspect-square rounded-lg overflow-hidden bg-muted border-2 ${
+                        selectedImage === index ? 'border-primary' : 'border-transparent'
+                      }`}
+                      data-testid={`button-thumbnail-${index}`}
+                    >
+                      <img src={img} alt={`View ${index + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -116,7 +104,7 @@ export default function ProductDetailPage() {
                     <Star
                       key={i}
                       className={`h-5 w-5 ${
-                        i < Math.floor(product.rating)
+                        i < Math.floor(product.rating || 0)
                           ? 'fill-primary text-primary'
                           : 'text-muted-foreground'
                       }`}
@@ -124,12 +112,12 @@ export default function ProductDetailPage() {
                   ))}
                 </div>
                 <span className="text-sm text-muted-foreground">
-                  {product.rating} ({product.reviews} reviews)
+                  {product.rating || 0} ({product.reviews || 0} reviews)
                 </span>
               </div>
 
               <div className="text-3xl font-bold" data-testid="text-product-price">
-                ${product.price.toFixed(2)}
+                ${(product.price || 0).toFixed(2)}
               </div>
 
               <p className="text-muted-foreground">{product.description}</p>
@@ -167,20 +155,16 @@ export default function ProductDetailPage() {
                 </Button>
               </div>
 
-              <div className="space-y-2 pt-4 border-t">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-muted-foreground">Brand:</span>
-                  <span className="font-medium">{product.specifications.Brand}</span>
+              {product.specifications && (
+                <div className="space-y-2 pt-4 border-t">
+                  {Object.entries(product.specifications).slice(0, 3).map(([key, value]) => (
+                    <div key={key} className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">{key}:</span>
+                      <span className="font-medium">{value as string}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-muted-foreground">Model:</span>
-                  <span className="font-medium">{product.specifications.Model}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-muted-foreground">Warranty:</span>
-                  <span className="font-medium">{product.specifications.Warranty}</span>
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -188,31 +172,37 @@ export default function ProductDetailPage() {
             <TabsList>
               <TabsTrigger value="description" data-testid="tab-description">Description</TabsTrigger>
               <TabsTrigger value="specifications" data-testid="tab-specifications">Specifications</TabsTrigger>
-              <TabsTrigger value="reviews" data-testid="tab-reviews">Reviews ({product.reviews})</TabsTrigger>
+              <TabsTrigger value="reviews" data-testid="tab-reviews">Reviews ({product.reviews || 0})</TabsTrigger>
             </TabsList>
             <TabsContent value="description" className="space-y-4 pt-6">
               <p className="text-muted-foreground">{product.description}</p>
-              <div>
-                <h3 className="font-semibold mb-3">Key Features:</h3>
-                <ul className="space-y-2">
-                  {product.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2 text-muted-foreground">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {product.features && (
+                <div>
+                  <h3 className="font-semibold mb-3">Key Features:</h3>
+                  <ul className="space-y-2">
+                    {product.features.map((feature: string, index: number) => (
+                      <li key={index} className="flex items-center gap-2 text-muted-foreground">
+                        <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </TabsContent>
             <TabsContent value="specifications" className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(product.specifications).map(([key, value]) => (
-                  <div key={key} className="flex items-center gap-4 py-3 border-b">
-                    <span className="text-muted-foreground min-w-32">{key}:</span>
-                    <span className="font-medium">{value}</span>
-                  </div>
-                ))}
-              </div>
+              {product.specifications ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(product.specifications).map(([key, value]) => (
+                    <div key={key} className="flex items-center gap-4 py-3 border-b">
+                      <span className="text-muted-foreground min-w-32">{key}:</span>
+                      <span className="font-medium">{value as string}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground">No specifications available.</p>
+              )}
             </TabsContent>
             <TabsContent value="reviews" className="pt-6">
               <p className="text-muted-foreground">Customer reviews will be displayed here.</p>
@@ -231,7 +221,7 @@ export default function ProductDetailPage() {
       <Footer />
       
       <CartSidebar
-        items={mockCartItems}
+        items={cartItems}
         isOpen={cartOpen}
         onClose={() => setCartOpen(false)}
         onUpdateQuantity={(id, qty) => console.log('Update quantity:', id, qty)}

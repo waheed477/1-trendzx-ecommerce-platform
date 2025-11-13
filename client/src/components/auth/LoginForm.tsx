@@ -1,15 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Card } from "../ui/card";
 import { useState } from "react";
 import { Link } from "wouter";
 
 interface LoginFormProps {
   onLogin?: (email: string, password: string) => void;
+  successMessage?: string;
 }
 
-export default function LoginForm({ onLogin }: LoginFormProps) {
+export default function LoginForm({ onLogin, successMessage }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,6 +25,13 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
         <h1 className="text-3xl font-bold">Welcome Back</h1>
         <p className="text-muted-foreground">Sign in to your account to continue</p>
       </div>
+
+      {/* Success Message */}
+      {successMessage && (
+        <div className="p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-md">
+          ✅ {successMessage}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
